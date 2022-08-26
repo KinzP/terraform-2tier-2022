@@ -1,5 +1,3 @@
-#vpc/routetables.tf 
-
 resource "aws_route_table_association" "public_assoc" {
   count = var.public_sn_count
   subnet_id = aws_subnet.public_subnet.*.id

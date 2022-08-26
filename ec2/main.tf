@@ -1,10 +1,10 @@
 #ec2/main.tf
 data "aws_ami" "server_ami" {
     most_recent = true
-    owners = ["137112412989"]
+    owners = ["amazon"]
 
     filter {
-        name = "KP21"
+        name = "name"
         values = ["amzn2-ami-kernel-5.10-hvm-2.0.20220426.0-x86_64-*"]
     }
 }
@@ -12,6 +12,7 @@ data "aws_ami" "server_ami" {
 resource "aws_key_pair" "KP21_kp" {
     key_name = var.key_name
     public_key = file(var.public_key_path)
+
 }
 
 resource "aws_instance" "KP21_private" {
@@ -28,12 +29,9 @@ resource "aws_instance" "KP21_bastion" {
     tags = {
         Name = "KP21_bastion"
     }
-
 key_name = aws_key_pair.KP21_kp.id
 vpc_security_group_ids = [var.public_sg]
 subnet_id = var.public_subnets
-
-
 
 root_block_device {
     volume_size = var.vol_size 

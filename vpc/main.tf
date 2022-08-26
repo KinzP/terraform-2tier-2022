@@ -1,5 +1,3 @@
-#/vpc/main.tf
-
 data "aws_availability_zones" "available" {}
 
 data "aws_region" "current" {}
@@ -23,6 +21,7 @@ resource "aws_vpc" "KP21_vpc" {
     Name = "KP21_vpc"
   }
 }
+
 
 
 resource "aws_subnet" "public_subnet" {

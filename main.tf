@@ -12,19 +12,22 @@ module "vpc" {
   access_ip        = ["0.0.0.0/0"]
   instance_type    = "t2.micro"
   public_sg_name   = module.vpc.public_sg.name
+  key_name         = "XXXX"
   ami_id           = var.ami_id
   aws_region       = var.aws_region
 
 }
 
 
-module "EC2" {
-  source              = "./EC2"
+module "ec2" {
+  source              = "./ec2"
   instance_count      = 2
   instance_type       = "t2.micro"
   public_sg           = module.vpc.public_sg
   public_subnets      = module.vpc.public_subnets
   vol_size            = 10
+  key_name            = "XXXX"
+  public_key_path     = "/Users/kinsey parham/Documents/KeyPairs"
   lb_target_group_arn = module.loadbalancer.lb_target_group_arn
   ami_id              = var.ami_id
 

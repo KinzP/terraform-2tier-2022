@@ -1,5 +1,3 @@
-#vpc-ASG.tf
-
 data "aws_ami" "server_ami" {
     most_recent = true
     owners = ["137112412989"]
@@ -8,32 +6,33 @@ data "aws_ami" "server_ami" {
         name = "name"
         values = ["amzn2-ami-kernel-5.10-hvm-2.0.20220426.0-x86_64-*"]
     }
+
 }
 
-resource "aws_launch_configuration" "KP_launchconfig" {
-name_prefix = "kpe-launchconfig"
+resource "aws_launch_configuration" "KP21_launchconfig" {
+name_prefix = "KP21-launchconfig"
 image_id = "${lookup(var.ami_id, var.aws_region)}"
 instance_type = var.instance_type
 key_name = var.key_name
 security_groups = aws_security_group.public_sg.id
 }
 
-resource "aws_autoscaling_policy" "KP_asp" {
-  name                   = "bastion-KP-policy"
+resource "aws_autoscaling_policy" "KP21_asp" {
+  name                   = "bastion-as-policy"
   scaling_adjustment     = 4
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
-  autoscaling_group_name = aws_autoscaling_group.KP_web.name
+  autoscaling_group_name = aws_autoscaling_group.KP21_web.name
 }
 
-resource "aws_launch_template" "KP_lt" {
+resource "aws_launch_template" "KP21_lt" {
   name_prefix   = "bastion-asg"
   image_id      = var.ami_id
   instance_type = var.instance_type
   security_group_names = var.public_sg_name
 }
 
-resource "aws_autoscaling_group" "KP_web" {
+resource "aws_autoscaling_group" "KP21_web" {
   name                = "bastion-autoscaling"
   vpc_zone_identifier = aws_subnet.public_subnet.id
   min_size            = 1
@@ -41,7 +40,7 @@ resource "aws_autoscaling_group" "KP_web" {
   desired_capacity    = 2
 
   launch_template {
-    id      = aws_launch_template.KP_lt.id
+    id      = aws_launch_template.KP21_lt.id
     version = "$Latest"
   }
 }
